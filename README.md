@@ -33,20 +33,18 @@
 
   Steps:
   
-  1. Start with all vertices as separate components
-  2. Sort all edges in increasing order of their weights
-  3. Consider the edge with the *smallest* weight
-  4. If adding the edge does not create a cycle:
-     
-  * add it to the spanning tree.
-  - Else
-  * skip it.
-    
-  
-  6. Move to the next *smallest* edge.
-  7. Repeat steps 4–6 until all vertices are connected.
-  8. The edges selected during the process form the minimum spanning tree.
-
+  1. Check the degree of all vertices. If any vertex has an odd degree, return IMPOSSIBLE.
+  2. Initialize an empty traversal stack and push the starting vertex (node 1) onto it.
+  3. Look at the top vertex on the stack.
+  4. If the top vertex has unvisited edges:
+     - Select an unvisited edge and mark both forward and reverse directions as used.
+     - Advance the vertex's edge pointer to skip used edges in future checks.
+     - Push the destination vertex onto the stack.
+  5. Else (if no unvisited edges remain for the top vertex):
+     - Pop the vertex from the stack and append it to the circuit result array.
+  6. Repeat steps 3–5 until the traversal stack is completely empty.
+  7. Verify that the result array contains exactly m + 1 vertices. If not, return IMPOSSIBLE due to disconnected edges.
+  8. Print the circuit result array in reverse order to get the correct path starting from node 1.   
 
   </td>
     <td >
