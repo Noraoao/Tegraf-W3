@@ -182,27 +182,155 @@
   <tr>
     <td width="50%" valign="top">
 
-### Reverse-Delete Algorithm [kalo udah diganti hapus ini]
+### Tucker’s Algorithm
 
   Steps:
   
-  1. Start with the full connected graph containing all its original edges.
-  2. Sort all edges in decreasing order of their weights.
-  3. Consider the edge with the *largest* weight.
-  4. Temporarily remove the edge from the graph and check if the graph remains connected:
-     
-  * If the graph remains connected, permanently delete the edge.
-  * Else, restore the edge back to the graph.
-  
-  5. Move to the next *largest* edge.
-  6. Repeat steps 4–5 until all remaining edges have been evaluated.
-  7. The remaining connected graph forms the minimum spanning tree.
-
+  1. Check the degree of all vertices; if any vertex has an odd degree, return IMPOSSIBLE.
+  2. Partition all $M$ streets into a set of edge-disjoint closed cycles by traversing unvisited edges until returning to a visited node.   
+  3. Initialize the main circuit (which starts at crossing 1).   
+  4. Find an unabsorbed cycle Ci that shares a common vertex v with the main circuit.   
+  5. Merge Ci into T at vertex v (k absorption) by traversing T up to v, inserting the entire cycle Ci, and continuing the rest of T.   
+  6. Repeat steps 4–5 until all cycles are merged into T.   
+  7. Verify that T contains all M edges. If not, return IMPOSSIBLE due to disconnected streets.   
+  8. Print the merged circuit T as the final Eulerian route starting from crossing 1.   
 
   </td>
     <td >
-      <img width="400" height="205" alt="WhatsApp Video 2026-09-15 at 00 35 05 (1)" src="https://github.com/user-attachments/assets/8fd3a865-d929-4ad6-a8f9-513f1b6ac02f" />
-      
+      Code:
+
+      #include <stdio.h>
+      #include <stdlib.h>
+
+      int main(void) {
+        // Fast I/O for C execution
+        int n, m;
+        if (scanf("%d %d", &n, &m) != 2) {
+            return 0;
+        }
+
+    // Allocate memory for Forward Star / Adjacency List graph structure
+    int *head = malloc((size_t)(n + 1) * sizeof(int));
+    int *next = malloc((size_t)(2 * m) * sizeof(int));
+    int *to = malloc((size_t)(2 * m) * sizeof(int));
+    int *degree = calloc((size_t)(n + 1), sizeof(int));
+    int *used = calloc((size_t)(2 * m), sizeof(int));
+    int *ptr = malloc((size_t)(n + 1) * sizeof(int));
+
+    // Stack and Path tracking for Hierholzer's Algorithm
+    int *stack = malloc((size_t)(m + 1) * sizeof(int));
+    int *path = malloc((size_t)(m + 1) * sizeof(int));
+
+    if (head == NULL || next == NULL || to == NULL || degree == NULL ||
+        used == NULL || ptr == NULL || stack == NULL || path == NULL) {
+        free(head);
+        free(next);
+        free(to);
+        free(degree);
+        free(used);
+        free(ptr);
+        free(stack);
+        free(path);
+        return 1;
+    }
+
+    // Initialize adjacency list heads
+    for (int i = 1; i <= n; ++i) {
+        head[i] = -1;
+    }
+
+    // Graph Construction: Each street is added as two directed edges
+    int edge_count = 0;
+    for (int i = 0; i < m; ++i) {
+        int u, v;
+        if (scanf("%d %d", &u, &v) != 2) {
+            free(head);
+            free(next);
+            free(to);
+            free(degree);
+            free(used);
+            free(ptr);
+            free(stack);
+            free(path);
+            return 1;
+        }
+
+        // Edge u -> v (at index 2*i)
+        to[edge_count] = v;
+        next[edge_count] = head[u];
+        head[u] = edge_count++;
+
+        // Edge v -> u (at index 2*i + 1)
+        to[edge_count] = u;
+        next[edge_count] = head[v];
+        head[v] = edge_count++;
+
+        degree[u]++;
+        degree[v]++;
+    }
+
+    // Check 1: Every crossing must have an even degree for an Eulerian circuit
+    for (int i = 1; i <= n; ++i) {
+        if (degree[i] % 2 != 0) {
+            printf("IMPOSSIBLE\n");
+            free(head); free(next); free(to); free(degree);
+            free(used); free(ptr); free(stack); free(path);
+            return 0;
+        }
+    }
+
+    // Set traversal pointers to current head of adjacency list
+    for (int i = 1; i <= n; ++i) {
+        ptr[i] = head[i];
+    }
+
+    int stack_size = 0;
+    int path_size = 0;
+
+    // Start Hierholzer's algorithm at crossing 1 (Post Office)
+    stack[stack_size++] = 1;
+
+    while (stack_size > 0) {
+        int u = stack[stack_size - 1];
+
+        // Advance pointer to skip already visited edges connected to node u
+        while (ptr[u] != -1 && used[ptr[u]]) {
+            ptr[u] = next[ptr[u]];
+        }
+
+        if (ptr[u] != -1) {
+            int e = ptr[u];
+            ptr[u] = next[e]; // Move pointer forward
+
+            used[e] = 1;        // Mark forward edge as used
+            used[e ^ 1] = 1;    // Mark reverse edge as used in O(1) time
+
+            stack[stack_size++] = to[e]; // Traversal step
+        } else {
+            // Backtracking step: Node u has no unvisited edges left
+            path[path_size++] = u;
+            stack_size--;
+        }
+    }
+
+    // Check 2: Connectivity verification
+    // A complete route visiting m streets must contain m + 1 crossings
+    if (path_size != m + 1) {
+        printf("IMPOSSIBLE\n");
+    } else {
+        // Output the path in reverse order (since nodes were pushed during backtrack)
+        for (int i = path_size - 1; i >= 0; --i) {
+            printf("%d%c", path[i], i == 0 ? '\n' : ' ');
+        }
+    }
+
+    // Free dynamically allocated memory
+    free(head); free(next); free(to); free(degree);
+    free(used); free(ptr); free(stack); free(path);
+
+    return 0;
+}
+       
   </td>
   </tr>
 </table>
@@ -222,9 +350,10 @@
 
 <img width="432" height="338" alt="image" src="https://github.com/user-attachments/assets/25950eb8-0d03-430d-9adc-48534fc194d9" />
 
-### Reverse-Delete
+### Tucker’s
 
-<img width="472" height="494" alt="image" src="https://github.com/user-attachments/assets/262956b9-29c0-492f-8b12-6292c8d586ba" />
+<img width="420" height="340" alt="image" src="https://github.com/user-attachments/assets/17944f41-99ea-4d91-828e-685f5f607dd4" />
+
 
 ## Usage of Ai [kalo udah diganti hapus ini]
 
