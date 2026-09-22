@@ -51,17 +51,18 @@
   </td>
     <td >
       Code :
-```c
-#include <stdio.h>
-#include <stdlib.h>
+      
+    #include <stdio.h>
+    #include <stdlib.h>
 
-int main(void) {
+    int main(void) {
     int n, m;
+
     if (scanf("%d %d", &n, &m) != 2) {
         return 0;
     }
-    
-    // Each undirected street is stored as two directed edges.
+
+    /* Each undirected street is stored as two directed edges. */
     int *head = malloc((size_t)(n + 1) * sizeof(int));
     int *next = malloc((size_t)(2 * m) * sizeof(int));
     int *to = malloc((size_t)(2 * m) * sizeof(int));
@@ -174,7 +175,8 @@ int main(void) {
     free(path);
     free(ptr);
     return 0;
-}
+    }
+      
   </td>
   </tr>
 </table>
