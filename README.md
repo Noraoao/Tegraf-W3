@@ -9,19 +9,132 @@
 ### Prim's Algorithm [kalo udah diganti hapus ini]
 
   Steps:  
-  1. Start with any vertex in the graph
-  2. Mark the starting vertex as part of the spanning tree
-  3. Look at all edges that connect a vertex inside the tree to a vertex outside the tree.
-  4. Choose the edge with the *smallest* weight.
-  5. Add the chosen edge and its outside vertex to the spanning tree.
-  6. Repeat steps 3–5 until all vertices are included in the spanning tree.
-  7. The edges selected during the process form the minimum spanning tree.
+  1. Check the degree of all vertices. If any vertex has an odd degree, return IMPOSSIBLE.
+  2. Start the tour at crossing 1 and record it as the current vertex in the path array.
+  3. Look for the next valid edge connected to the current vertex:
+     - Iterate through all neighboring vertices connected by an unused street.
+     - Check if traversing the edge acts as a bridge (which disconnects the remaining graph) using is_valid_next_edge().
+     - Pick a non-bridge edge if available; otherwise, pick the bridge edge if it is the only option left.
+  4. Remove the selected edge from the graph and move to the destination vertex.
+  5. Append the new vertex to the path array.
+  6. Repeat steps 3–5 until no remaining edges are connected to the current vertex.
+  7. Verify that the path array contains exactly $m + 1$ vertices; if not, return IMPOSSIBLE due to disconnected streets.
+  8. Print the collected path array sequentially from start to end as the final Eulerian route.   
 
 
   </td>
     <td >
-      <img width="400" height="205" alt="WhatsApp Video 2026-09-15 at 00 35 04 (1)" src="https://github.com/user-attachments/assets/4577feee-3539-4d79-aff6-0a6bfab07256" />
+      Code:
+      
+     #include <stdio.h>
+    #include <string.h>
 
+    #define MAX_VERTICES 2005 
+    #define MAX_EDGES 200005
+
+    int graph[MAX_VERTICES][MAX_VERTICES];
+    int n, m;
+
+    int path[MAX_EDGES];
+    int path_sz = 0;
+
+    int count_reachable(int v, int visited[]) {
+        visited[v] = 1;
+        int count = 1;
+        for (int i = 1; i <= n; i++) {
+            if (graph[v][i] && !visited[i]) {
+                count += count_reachable(i, visited);
+            }
+        }
+        return count;
+    }
+
+    int is_valid_next_edge(int u, int v) {
+        int count = 0;
+    
+        for (int i = 1; i <= n; i++) {
+            if (graph[u][i]) count++;
+        }
+    if (count == 1) return 1;
+
+    int visited[MAX_VERTICES] = {0};
+    int count1 = count_reachable(u, visited);
+
+    graph[u][v]--;
+    graph[v][u]--;
+    memset(visited, 0, sizeof(visited));
+    int count2 = count_reachable(u, visited);
+
+    graph[u][v]++;
+    graph[v][u]++;
+
+    return (count1 <= count2);
+    }
+
+    void find_euler_tour(int start) {
+        int curr = start;
+        path[path_sz++] = curr;
+    
+        while (1) {
+            int next_v = -1;
+        
+            for (int v = 1; v <= n; v++) {
+                if (graph[curr][v]) {
+                    if (next_v == -1) {
+                        next_v = v;
+                    }
+                    if (is_valid_next_edge(curr, v)) {
+                        next_v = v;
+                        break; 
+                    }
+                }
+            }
+        
+            if (next_v == -1) break;
+        
+            graph[curr][next_v]--;
+            graph[next_v][curr]--;
+            curr = next_v;
+        
+            path[path_sz++] = curr;
+        }
+    }
+
+    int main() {
+        if (scanf("%d %d", &n, &m) != 2) return 0;
+    
+        int deg[MAX_VERTICES] = {0};
+    
+        for (int i = 0; i < m; i++) {
+            int u, v;
+            scanf("%d %d", &u, &v);
+            graph[u][v]++;
+            graph[v][u]++;
+            deg[u]++;
+            deg[v]++;
+        }
+    
+        for (int i = 1; i <= n; i++) {
+            if (deg[i] % 2 != 0) {
+                printf("IMPOSSIBLE\n");
+                return 0;
+            }
+        }
+    
+        find_euler_tour(1);
+    
+        // Connectivity check: Did we traverse all m edges?
+        if (path_sz != m + 1) {
+            printf("IMPOSSIBLE\n");
+        } else {
+            for (int i = 0; i < path_sz; i++) {
+                printf("%d ", path[i]);
+            }
+            printf("\n");
+        }
+    
+        return 0;
+    }
   </td>
   </tr>
 </table>
