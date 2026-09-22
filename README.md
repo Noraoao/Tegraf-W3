@@ -6,7 +6,7 @@
   <tr>
     <td width="50%" valign="top">
 
-### Prim's Algorithm [kalo udah diganti hapus ini]
+### Fleury's Algorithm  
 
   Steps:  
   1. Check the degree of all vertices. If any vertex has an odd degree, return IMPOSSIBLE.
@@ -453,17 +453,17 @@
 - Open a C compiler
 - Run the code
 
-## Result of sample [kalo udah diganti hapus ini]
+## Result of sample 
 
-### Prim
+### Fleury
 
-<img width="327" height="289" alt="image" src="https://github.com/user-attachments/assets/8e3b8c0a-c10a-4b4c-a5cd-09f24b4e4754" />
+ <img width="417" height="332" alt="image" src="https://github.com/user-attachments/assets/54cb57d0-b1ec-47c5-a077-e55e63aae2ef" />
 
 ### Hielholzier
 
 <img width="432" height="338" alt="image" src="https://github.com/user-attachments/assets/25950eb8-0d03-430d-9adc-48534fc194d9" />
 
-### Tucker’s
+### Tucker
 
 <img width="420" height="340" alt="image" src="https://github.com/user-attachments/assets/17944f41-99ea-4d91-828e-685f5f607dd4" />
 
