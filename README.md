@@ -300,9 +300,9 @@
   Steps:
   
   1. Check the degree of all vertices; if any vertex has an odd degree, return IMPOSSIBLE.
-  2. Partition all $M$ streets into a set of edge-disjoint closed cycles by traversing unvisited edges until returning to a visited node.   
-  3. Initialize the main circuit (which starts at crossing 1).   
-  4. Find an unabsorbed cycle Ci that shares a common vertex v with the main circuit.   
+  2. Partition all M streets into a set of edge-disjoint closed cycles by traversing unvisited edges until returning to a visited node.   
+  3. Initialize the main circuit T with an initial cycle starting at crossing 1. 
+  4. Find an unabsorbed cycle Ci that shares a common vertex v with the main circuit T.    
   5. Merge Ci into T at vertex v (k absorption) by traversing T up to v, inserting the entire cycle Ci, and continuing the rest of T.   
   6. Repeat steps 4–5 until all cycles are merged into T.   
   7. Verify that T contains all M edges. If not, return IMPOSSIBLE due to disconnected streets.   
@@ -356,7 +356,7 @@
 
     degree[u]++;
     degree[v]++;
-}
+    }
 
     // Fungsi untuk membentuk 1 siklus tunggal dari simpul awal (Cycle Decomposition)
     Node* get_cycle(int start_node) {
