@@ -507,4 +507,4 @@
 ## Usage of Ai
 
 - https://share.gemini.google/TAsWWn5vB5ZW
-- 
+- https://share.gemini.google/BfNuIGJkYP7j
