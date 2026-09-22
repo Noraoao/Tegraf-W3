@@ -103,7 +103,7 @@
 
 <img width="472" height="494" alt="image" src="https://github.com/user-attachments/assets/262956b9-29c0-492f-8b12-6292c8d586ba" />
 
-## Usage of Ai
+## Usage of Ai [kalo udah diganti hapus ini]
 
 - https://claude.ai/share/6ca69834-0ce3-4beb-b3e5-3a9a2dee0408
 - https://share.gemini.google/Z8uD9kv3qFwU
