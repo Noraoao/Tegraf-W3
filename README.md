@@ -48,10 +48,8 @@
 
   </td>
     <td >
-    
-      ```
       Code :
-      ```
+
     #include <stdio.h>
     #include <stdlib.h>
 
